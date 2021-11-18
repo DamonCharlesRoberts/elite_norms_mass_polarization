@@ -7,10 +7,11 @@
 # Setup:
 	#* Load libraries
 from statsmodels.stats.power import TTestIndPower
-
+from matplotlib import pyplot as plt
+from numpy import array
 # Power analysis:
-effect = 0.8
-alpha = 0.01
-power = 0.8
+effect_sizes = array([0.2, 0.5, 0.95])
+sample_sizes = array(range(5, 200))
 analysis = TTestIndPower()
-result = analysis.solve_power(effect, power=power, nobs1=None, ratio = 1.0, alpha = alpha)
+analysis.plot_power(dep_var ='nobs', nobs=sample_sizes, effect_size = effect_sizes)
+plt.savefig('/Users/damonroberts/Dropbox/current_projects/dcr_elite_norms_mass_polarization/figures/power_analysis.jpeg')
