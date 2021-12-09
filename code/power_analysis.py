@@ -7,7 +7,7 @@
 # Setup:
 	#* Load libraries
 import os
-from statsmodels.stats.power import TTestIndPower
+import statsmodels.stats.power as smpwr
 from matplotlib import pyplot as plt
 import seaborn as sns
 from numpy import arange
