@@ -16,7 +16,7 @@ box::use(
     fabricatr = fabricatr[fabricate, draw_binary, potential_outcomes, reveal_outcomes],
     randomizr = randomizr[complete_rs, complete_ra, block_ra],
     estimatr = estimatr[lm_robust],
-    ggplot2 = ggplot2[ggplot, aes, geom_line, geom_point, theme_bw, labs],
+    ggplot2 = ggplot2[ggplot, aes, geom_line, geom_point, theme_bw, labs, theme, ggsave, element_blank],
     patchwork = patchwork[...]
 )
     #* Load ANES Dataset
@@ -73,11 +73,11 @@ whiteSample = rnorm(mean = whiteMean, sd = whiteSD, n = 2000)
 effect = c(-0.9, -0.8, -0.7,-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 finalDF = data.frame()
 for(i in effect){
-    study1DGP = declare_model(N = 2000, U = rnorm(2000), knowledge = knowledgeSample, attention = attentionSample, pid = pidSample, white = whiteSample, treatment = draw_binary(0.5, N = 2000), female = draw_binary(0.5, N = 2000), potential_outcomes(Y ~ (i/3) * treatment + (i/6) * attention + i * treatment * attention + (i/6) * knowledge  + (i/10) * female + (i/15) * white + U))
+    study1DGP = declare_model(N = 2000, U = rnorm(2000), knowledge = knowledgeSample, attention = attentionSample, pid = pidSample, white = whiteSample, Z = draw_binary(0.5, N = 2000), female = draw_binary(0.5, N = 2000), potential_outcomes(Y ~ (0.6) * Z + (0.3) * attention + 1.8 * Z * attention + (0.3) * knowledge  + (.18) * female + (.09) * white + U))
            #** Two-arm design with interaction
 study1TwoArm = study1DGP + 
     declare_inquiry(ATE = mean(Y_Z_1 - Y_Z_0)) +
-    declare_assignment(Z = treatment) +
+    declare_assignment(Z = Z) +
     declare_measurement(Y = reveal_outcomes(Y ~ Z)) +
             #*** Interaction and Main Effect
     declare_estimator(Y ~ Z + attention + knowledge + female + white, model = lm_robust, label = 'Main Effect') +
@@ -97,7 +97,7 @@ tidy = broom::tidy(design_diagnoses) |>
 finalDF = rbind(finalDF, tidy)
 print('Finished iteration')
 }
-
+saveRDS(finalDF, 'data/study_1_simulation.RDS')
     #* Extract diagnosands
 rmse = finalDF |>
     filter(diagnosand == 'rmse')
@@ -106,23 +106,26 @@ bias = finalDF |>
     filter(diagnosand == 'bias')
 
 power = finalDF |>
-    filter(diagnosand == 'power')
+    filter(diagnosand == 'power' & effect_size <= 0.5 & effect_size >= -0.5)
 
 rmsePlot = ggplot(data = rmse) +
     geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
     geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
     theme_bw() +
+    theme(legend.position = 'bottom', legend.title = element_blank()) + 
     labs(x = 'Effect Size', y = '', title = 'RMSE')
 biasPlot = ggplot(data = bias) +
     geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
     geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
     theme_bw() +
-    labs(x = 'Effect Size', y = '', title = 'Bias')
-powerPlot = ggplot(data = bias) +
+    theme(legend.position = 'none') +
+    labs(x = '', y = '', title = 'Bias')
+powerPlot = ggplot(data = power) +
     geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
     geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
     theme_bw() +
-    labs(x = 'Effect Size', y = '', title = 'Power')
+    theme(legend.position = 'none') +
+    labs(x = '', y = '', title = 'Power', caption = 'N = 2000')
 
 diagnosesPlot = biasPlot + rmsePlot + powerPlot
-ggsave(diagnosesPlot, 'figures/study_1_diagnoses.jpeg')
+ggsave('figures/study_1_diagnoses.jpeg')
