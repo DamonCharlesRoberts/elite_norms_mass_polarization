@@ -1,0 +1,290 @@
+---
+title: |
+  Changing Norms and Partisan Polarization
+subtitle: How elites advance mass polarization
+short-title: Changing Norms and Partisan Polarization
+published: "Pre-Analysis Plan: please do not distribute without author permission*"
+code-repo: "Replication materials are stored at <https://github.com/DamonCharlesRoberts/elite_norms_mass_polarization>"
+author:
+  - name: Damon C. Roberts
+    email: damon.roberts-1@colorado.edu
+    orcid: 0000-0002-4360-3675
+    title: PhD Candidate
+    affiliations:
+      - id: CU
+        name: University of Colorado Boulder
+        department: Political Science
+        address: 333 UCB
+        city: Boulder
+        region: CO 
+        postal-code: 80309-0333
+    attributes:
+      corresponding: true    
+abstract: |
+    The American public are polarized. There is debate among scholars, however, as to where this polarization comes from. Some argue that polarization is the result of growing differences in policy preferences, and others argue that it is the result of strengthening and more distinguishable identities. For those making the argument that polarization is the result of identity, it remains unclear where resulting identity-based behaviors come from. This project argues that the public learn polarizing behavior from the norms of how to participate in politics from polarized politicians. Further , it argues that popular measures of affective polarization contain this performative adherence to norms by those wanting to be "good partisans". The present manuscript proposes three studies to examine this question. The first examines whether the public have the capacity to detect such differencing behavior. The second and third studies examine whether they punish co-and-out-partisans for engaging in this differencing behavior and whether exposure to such elite behavior encourages subjects to report higher levels of affective polarization as measured by differences in affinity towards the parties. 
+thanks: |
+    I would like to thank Anand Sokhey, Sarah Brown, and Tyler Garrett for their advice on early drafts of this project. 
+additional-info: |
+    I have no known conflict of interest to disclose.
+keywords:
+  - elite polarization
+  - mass polarization
+  - norms
+date: today
+bibliography: references.bib
+format:
+  hikmah-pdf: default
+execute:
+  echo: false
+  warning: false
+  error: false
+linestretch: 2
+---
+{{< pagebreak >}}
+```{r}
+#| label: setup-block
+# Setup 
+    #* Set seed
+set.seed(90210)
+    #* Modularly load functions
+box::use(
+    haven = haven[read_dta],
+    dplyr = dplyr[mutate, case_when, select, filter, bind_rows],
+    DeclareDesign = DeclareDesign[...],
+    DesignLibrary = DesignLibrary[two_by_two_designer, two_arm_designer],
+    fabricatr = fabricatr[fabricate, draw_binary, potential_outcomes, reveal_outcomes],
+    randomizr = randomizr[complete_rs, complete_ra, conduct_ra, block_ra],
+    estimatr = estimatr[lm_robust, difference_in_means],
+    ggplot2 = ggplot2[ggplot, aes, geom_line, geom_point, theme_bw, labs, theme, ggsave, element_blank, element_text, guides, guide_legend],
+    patchwork = patchwork[...]
+)
+    #* create empty list object to store data
+data = list()
+    #* Load the ANES dataset
+data[['anes']] = read_dta('C:/Users/damon/Dropbox/datasets/anes_2020_timeseries/anes_2020_timeseries.dta')
+```
+
+# Introduction
+
+By many accounts, the story of contemporary American politics is one of polarization.^[Though there are still debates about this claim [see @iyengar_et-al_2012 for a discussion of this debate]] Since the 1970's the degree to which the American public see eye to eye on policy has declined. The primary predictor of the public's views on where policy should go is partisanship [@campbell_et-al_1969, Chapter 6]. While most scholars of American politics agree with this claim, they are divided on the question of where mass polarization comes from. 
+
+Given that the public are relatively unaware and uninterested in politics [@berelson_1952;@delli-carpini_keeter_1996], some contend that the public make up for this by heavily relying on elite cues for political information [@zaller_1992;@zaller_2003]. Further, scholars advancing this argument contend that as a consequence of little knowledge, the public rely on their partisanship as a heuristic by which to evaluate politics [@delli-carpini_keeter_1996]. This implies that the public's views of politics are heavily influenced upstream by political elites and is a central group-based identity the public rely on [@campbell_et-al_1969, Chapter 7; @schickler_green_1997]. 
+
+Others disagree with this view of the sources of mass-polarization. Coinciding with significant realignment of parties in Congress and among the public, some scholars contend that the polarization we have seen since the 1960's and 1970's is the result of ideological sorting and of adjustments to electoral strategy among candidates seeking political office [@fiorina_abrams_2008_arps]. Defenders of this claim use evidence of the ideological moderation of voters and the relative lack of party loyalty among groups like Whites as suggestive of a public who are polarized as the result of Downsian electoral strategy among political candidates and of a problem with measurement [@fiorina_et-al_2008_jop]. 
+
+In response, defenders of the identity-based explanation of polarization directly test the evidence which purportedly demonstrates the problem with the argument. In an analysis of why the public appear ideologically moderate, evidence suggests that these common ideology measures really are just capturing an ideologically naive public who defaults to moderation [@kinder_kalmoe_2017]. Similarly, some evidence suggests that movement on issues occurs only for partisans and not for independents [@layman_carsey_2002_ajps]. Though whites are divided in respect of partisanship, some attribute this to the role of cross-cutting identities which traditionally may divide individuals [@baldassarri_goldberg_2014_ajs]. There, however, appears to be a trend indicating a change to that [@sides_et-al_2018]; especially when we consider the overall decrease in cross-cutting identities [@mason_2018_cup]. Where the identity-based literature remains unclear, however, is without providing information about policy difference to the public, what, then, do political elites teach the public. Generally, it appears that most scholars agree that polarization, for the average American, is the result of polarization.
+
+This project advances the argument that polarization may be elite-driven not just through policy- and stereotype-based information-sharing but also through norm-setting. Where I define norms here as a set of behaviors or the extent to which a behavior is appropriate [@pickup_et-al_2020_pb]. Traditionally, the literature sees elites as ideologically divided, whereas the public are emotionally divided. While negative partisanship is present among the public, the effects are mostly ascribed to elites and not necessarily out-partisans in the public [@druckman_levendusky_2019]. Some argue that the discrimination partisans display toward out-partisans provide incentives for elites to be confrontational rather than cooperative [@iyengar_westwood_2015_ajps]. I argue that given the other literature cited here, we should expect information to flow from elites to the public - that the public learn these norms of political division from elites. I advance the argument by @pickup_et-al_2020_pb that the public do not just recognize party-based norms and behave according to them, but that norms are a primary source of information flowing from elites to the public and that it contributes to the polarization among the masses that scholars observe. 
+
+# Polarization as a set of norms
+
+Many scholars credit polarization in the public to group conflict. As a stable response throughout one's life, partisanship appears to not be the result of an individual's tally of congruent policy preferences, but that partisanship is a social identity one takes on and maintains [@green_et-al_2002]. As with other social identities, partisanship is not just a representation of policy divergence but is used by voters as a heuristic to evaluate events, stereotype others, and to distinguish between themselves and members of the out-group. Partisans express less positive views of those from the out-party [@iyengar_westwood_2015_ajps], they express and take on a variety of stereotypes [@ahler_sood_2018], demonstrate in-group preference in dating [@nicholson_et-al_2016;@huber_2017;@iyengar_et-al_2019] and in where one lives [@liu_et-al_2019]. 
+
+As a group identity, partisanship is a cognitively efficient means to evaluate policy and political events. The public often learn about these from political elites [@zaller_1992]. As a group identity, individuals evaluate information with a strong bias toward that which comes from fellow partisans [@taber_lodge_2006;@lodge_taber_2013_cup;@stromback_et-al_2021_bpp].  This generates a public where they know little about the other group's views other than that they are different and that they are wrong. This also depicts a public that is heavily dependent on learning politics from politicians [@zaller_1992]. 
+
+As politics is not wholly evaluated through policy, the public care about other forms of information by which they base decisions on. The public is one that pays significant attention to the process of policy generation [@hibbing_theiss-morse_2002]. Despite the prevalence of polarization among the public, there are few who are predisposed to not wanting policy compromise [@arceneaux_2019]. In general, the public reward representatives who engage in bipartisan compromise on policy [@wolak_2020]. In conflict with the Fiorina argument, this presents a public which evaluates and is polarized not on policy content or issues but on process.
+
+With so much attention paid to the process and not policy itself, the public are exposed to how politicians behave in relation with their out-partisan colleagues. With the public accepting cues from their representatives in how to behave and interact with out-partisans, their lack of interest in specific policy output but rather a preference for policy free from conflict [@atkinson_2017], polarization appears to be partly learned from behavioral norms and not fully based upon policy content. Some recent evidence suggests that, despite the traditional view, American politics is not a story of ideological polarization among elites and affective (or emotional) polarization among the public. Elites are also affectively polarized and may be more so than the public [@enders_2021_jop].
+
+While behavioral manifestations of elite polarization has deleterious effects on engagement in politics and trust in government [@mutz_reeves_2005], it distinguishes groups [@groenendyk_2018]. The behavior of members of Congress is so shaped by polarization that analyses using motion detection highlight evidence that representatives tend to not mingle with their out-partisan colleagues [@dietrich_2021]. Further, parties seek to capture issue and character trait ownership on the basis of distinguishing themselves from the other party [@clifford_2020]. The minority party in government attribute blame to the party currently in power. In doing this, they argue that the other party is engaged in incompetence and corruption [@lee_2009]. In other words, they establish that doubting the intentions of the other party is warranted and is encouraged. They demonstrate that physical distance and avoidance of mingling with those not in the same party is appropriate. They signal difference and identify the other party as threatening.
+
+Scholars observe similar behaviors among the public. The public are averse to significant generalized political disagreement [@klar_krupnikov_2016] and are reluctant to engage in conversations that they anticipate to be disagreeable [@carlson_settle_2022_cup]. They tend to have more politically homogenous networks [@butters_hare_2022_pb]. When confronted with conflicting political views, they tend to ignore the information and instead spend significant cognitive effort in finding a counterargument [@taber_lodge_2006]. When forced to interact with out-partisans, individuals have significant negative physiological reactions to such conversations and tend to either censor themselves, conform their expressed views with those of their discussion partner, or tend to remain quiet[@carlson_settle_2022_cup]. The positive effects of cross-partisan conversations [@levendusky_stecula_2021] tend to be rather short-lived [@santoro_broockman_2022_sa]. They also are willing to denigrate those from the other party [@iyengar_westwood_2015_ajps]. They are physically distant from out-partisans. They tend express desire to live in different neighborhoods and tend to live in neighborhoods that conform to the cultural and policy stereotypes of the party (i.e. walkable and densely populated and mixed-use neighborhoods for Democrats) [@liu_et-al_2019;@lyons_utych_2021]. That is, the public avoid interactions with those they might disagree with; if they do have an interaction with an out-partisan, any positive effects coming from the interaction tend to be minimal; they doubt the intentions of the other party; and they see themselves as different than those in the out-party while seeing these differences as justifications for feeling threatened. 
+
+Seemingly, the public are engaging in similar behaviors to elites. It is not clear that the public are naturally choosing very similar behaviors to elites as a manifestation of some innate behavior to group conflict. Rather, the public may be learning the extent to which these behaviors are appropriate from messages and the behaviors they observe from politicians. As with behaviors directed to other social out-groups, these behaviors are likely learned. Just as white children learn racially discriminatory behaviors against Black children [see @sears_brown_2013], the socialization process in politics may include what behaviors - and the extent to which they - are appropriate for interactions with out-partisans. Given the media's proclivity to cover political events as group conflict to stimulate viewership [@baum_jamieson_2006], they are an important mediating force in highlighting and interpreting these norms by politicians for those in the public who may not be engaged or knowledgeable enough to make those inferences themselves.
+
+Exposure to political news contributes to polarization - not through more information about policy, but through information of delineation and difference of the parties. Evidence suggests that higher exposure to networks like Fox News increases polarization for not just Republicans [@licari_2020_apr], but for also for out-partisans [@webster_abramowitz_2017]. Exposure to negativity in the news decreases engagement with out-party arguments [@muddiman_et-al_2020]. Further, incivility on online discussion about political events does not polarize the public's attitudes about the relevant issues, but instead it effects the degree to which one sees the public as polarized [@hwang_et-al_2014]. That is, incivility informs group difference for individuals but fails to inform them about the policy issue itself.
+
+Taken together, evidence suggests that there is a relatively uninformed public who is interested in process and not policy. As a result, they are affectively polarized. This occurs through exposure to negative news and incivility. Their motivations for learning are directionally biased for their in-group. Political elites are not incapable of expressing affective polarization as they, themselves, are affectively polarized. These phenomenon coincide to produce incentives for co-partisans in the public and elites to differentiate themselves from out-partisans sans issue content. One way to do this is through the expression of behaviors indicating differentiation. As elites engage in them, and as the public want to be good partisans, the public learn these behaviors from elites.
+
+Therefore, I expect that when members of the public are exposed to media which highlight and evaluate polarizing elite behavior (distance, difference, lack of trust, prejudice), they will not only become more okay with their representatives engaging in that behavior, but they too will see it as appropriate behavior for them and other co-partisans to engage in. I also expect that they will see these same behaviors by out-partisans to be inappropriate and will hold more negative attitudes towards out-partisans who do this.
+
+
+<!--
+# Summary of project
+
+While many agree that political polarization characterizes contemporary American politics, scholars are somewhat divided over questions of why the public are polarized. Some argue that political polarization is guided by positive or negative emotional attachments members of the public have toward their party [see @iyengar_et-al_2012] with which they see as a social identity. Others argue that polarization is the result of division over ideological differences [see @fiorina_abrams_2008_arps].
+
+Taking the first position as true, we should expect that, as a social identity, there are expecations about group membership due to the definitions which provide differentiation between these groups [@huddy_2001]. One mechanism for this differentiation to occur is through norms which provide information to members of the group about what behavior is appropriate in reference to those behaviors directed toward members of the in-group and out-group. For partisans, scholars have detected a number of behaviors indicating discrimmination toward out-partisans and preferences for co-partisans [see @iyengar_westwood_2015_ajps].
+
+The extant literature provides no clear direction as to whether these behaviors are learned or natural. As we hold a number of social identities with different meanings and can do so simultaneously, what appears most reasonable is that these norms of behavior for this particular partisan identity are learned. As the public rely on heuristics to process political information [@converse_1964], they often rely on information from professional observers of politics and most importantly from political elites [@zaller_1992]. This means that one potential source of information about how to behave around co-and-out-partisans comes from members of the public watching what politicans do with co-and-out-partisan colleagues. As individuals are often motivated through group-justification, we should expect that when the public see political elites engage in such behavior, the public will want to follow suit to demonstrate solidarity with the group [@jost_et-al_2022_n]. This comports with evidence of norm-following among partisans to engage in expressive partisanship [@huddy_et-al_2015_apsr; @pickup_et-al_2020_pb].
+
+Polarization among elites does not appear to be all that different than in the public. Political scientists have moved past the idea that political elites are *only* ideologically polarized and provide evidence which suggests that they are just, if not more, affectively polarized than the public [@enders_2021_jop]. Documentation of this affective polarization comes from more than self-reported surveys like we get from the public, but also through efforts such as detecting the frequency by which members of congress interact with in-and-out-partisans on the floor of the U.S. House of Representatives between between votes [@dietrich_2021]. That is, one can watch the news and see the presence of polarization among politicians.
+
+These behavioral manifestations of affective polarization may be a choice that politicians make to issue a symbolic statement about their loyalty to co-partisan colleagues and to their electoral base. This potentially is a source of information for voters. This information is rather easy to process and interpret, void of complex technical details about policy and issues, and provides useful information about what is expected of them as a member in possession of a particular partisan affiliation.
+
+If this mechanism is indeed what explains the presence of affective polarization among the public, not only does this have implications for our understanding of incentives for political elites and to clarify the seemingly endogenous relationship between polarization in the public and among elites, but it also has implications for current pouplar measures. Current measures of affective polarization in surveys utilize feeling thermometer scales where respondents are asked to rate each party on a scale running from 0 - 100 with 0 representing "coldness" felt towards that party or 100 with "warmness" felt towards the party. The difference between the reported feeling of warmth or coldness of the two parties represents the degree to which that person holds affectively polarized views. While these measures express valence and the degree to which it is present^[Though, there are some who are quite critical of these measures' ability to capture affective polarization either as an issue of the scale or conceptually [@druckman_levendusky_2019].], the measure may additionally capture the *desire* to show distance between the two parties. That is, part of the differences in these feeling thermometer scores may be partially performative as they are emulating co-partisan elites engage in similarly exaggerated differentiation between them with out-partisans. If true, this has implications for the way we think about the measure.
+
+I propose the three following studies to investigate the following hypotheses: The public recognize and can detect behavioral differences between the way co-partisan and out-partisan elites interact with their colleagues (**$H_1$**). As they can recognize these behavioral norms about appropriate behavior with co-and-out-partisans, the public punish co-partisans who do not take steps to differentiate themselves from out-partisans and will punish out-partisans for engaging in such differentiating behaviors (**$H_2$**). Likewise, the public will reward co-partisans who do take steps to differentiate themselves from out-partisans and will also reward out-partisans who take fewer steps to differentiate themselves from the respondent's party. Respondents who are primed to think about their partisan identity will have exaggerated differences in feeling thermometer scores of the two parties and will also refer to themselves as stronger partisans than those who do not have the same prime (**$H_3$**). 
+
+
+-->
+# Description of Studies
+
+```{r}
+#| label: declare-population
+# Declare population
+data[['knowledge']] = data[['anes']] |>
+    select(V201642, V201644, V201645, V201646, V201647) |>
+    mutate(know1 = ifelse(V201642 == 1896, 1, 0),
+            know2 = ifelse(V201644 == 6, 1, 0),
+            know3 = ifelse(V201645 == 1, 1, 0),
+            know4 = ifelse(V201646 == 1, 1, 0),
+            know5 = ifelse(V201647 == 2, 1, 0),
+            knowledge = ((know1 + know2 + know3 + know4 + know5)/5)
+            )
+data[['attention']] = data[['anes']] |>
+    select(V201005) |>
+    mutate(attention = ifelse(V201005 <= 0, NA, V201005))
+
+data[['pid']] = data[['anes']] |>
+    select(V201231x) |>
+    mutate(pid = ifelse(V201231x <= 0, NA, V201231x))
+
+data[['white']] = data[['anes']] |>
+    select(V201549x) |>
+    mutate(white = ifelse(V201549x <= 0, NA, V201549x))
+```
+
+To examine the proposed experimental studies, I follow the Model-Inquiry-Data-Answer (MIDA) procedure outlined by @blair_et-al_2019. As opposed to using power analyses where all other features are considered to be optimal, the MIDA procedure allows for comparisons of design performance with simulations where various features from model choice and estimator, design and sampling choices, and the estimand are all explicitly specified. Following processes such as these reduce the chances of p-hacking by requiring researchers to be clear about their research design choices before seeing the data or running preliminary models [@brodeur_et-al_2022_wp].
+
+As there are a total of three studies, the total number of participants across the three experimental studies should be no more than 1,500 individuals. The studies will be from the same sample and will recieve the same treatment. Distinguishing them as three separate studies serves the purpose of making clear the differences for the outcome of interest. The figures representing the diagnoses of the estimators explicitly define how large the proposed sample size is for the given study. So long as the statistical power stays above $0.8$, we are at the standard - where we should expect that, on average, $1$ out of $5$ times we commit Type II error.
+
+$\text{treatment}_i$ in all of these studies refers to subjects' exposure to information suggesting this differencing behavior by elites. The treatment will take the form of a text-based vignette which provides a brief news report about a recent vote on a high-use interstate highway funding bill. Though this is not a visual treatment manifesting differencing behavior, text-based information expressing group differences are relatively common. In a recent study examining the behavior of members of Congress on twitter estimate that just under 20% of tweets contain rhetoric expressing group differences based on partisanship [@ballard_et-al_2022_lsq]. When considering that not all politicians take on this "legislative style" as some prefer to share messages that communicate directly to constituents about what they are doing for them [@bernhard_sulkin_2018], text-based treatments also are relatively easier to maintain internal validity than image-based information as manipulation of images might be flawed and highly suspect as original or due to a lack of equivalency between treatments when using different images between conditions.
+
+## Study 1
+
+To test **$H_1$**, the outcome of interest is whether individuals are able to detect behavioral differences among elites with regard to how they treat out-partisan colleagues. From the discussion above, the data generating process under randomization is expected to be: 
+
+$$
+\text{Detection}_i = \text{treatment}_i + \text{partisan congruence}_i + \text{treatment}_i \times \text{partisan congruence}_i + \epsilon_i
+$$
+
+## Study 2
+
+To test **$H_2$**, the outcome of interest is the degree to which respondents punish or reward out-partisan elites who engage in differencing behavior with the individual's co-partisan representatives. Likewise, the hypothesis expects that individuals reward co-partisan elites who engage in this same differencing behavior with the individual's out-partisan representatives. From the discussion above, the data generating process under randomization is expected to be:
+
+$$
+\text{Punish}_i = \text{treatment}_i + \text{partisan congruence}_i + \text{treatment}_i \times \text{partisan congruence}_i + \epsilon_i
+$$
+
+## Study 3
+
+To test **$H_3$**, the outcome of interest is degree of polarization, measured as the difference between reported feeling thermometer scores between the two parties, as determined by whether one is primed, by recieving the treatment, or not. The data generating process under randomization is expected to be:
+
+$$
+\Delta \text{PID Feeling Thermometers}_i = \text{treatment}_i + \text{partisan congruence}_i + \text{treatment}_i \times \text{partisan congruence}_i + \epsilon_i
+$$
+
+The expected data generating processes suggests that I should use a $2 \times 2$ factorial design. The $2 \times 2$ factorial design randomly assigns participants into a congruent partisan differencing, incongruent partisan differencing, a congruent partisan no differencing, or an incongruent no differencing condition. This randomization should close backdoor paths that may threaten my ability to calculate the causal effects of the treatments. For participants who are assigned into either of the differencing conditions, $\text{treatment}_i$ is coded as 1 and 0 if in one of the two no differencing conditions. If they are assigned into either of the two partisan congruence conditions, $\text{partisan congruence}_i$ is coded as 1 if assigned into a condition where the politician is a co-partisan with the subject and 0 if the politician is an out-partisan. I will then use linear regression where I examine the main effects of the differencing treatment and partisan congruence along with an interaction term for the two conditions. Specifically, my simulation of the studies that I use here fits a linear regression with robust standard errors. So long as one's model is properly specified, I should expect no differences between classical and robust standard errors. To be sure whether they are different, I will use the General Information Matrix test proposed by @king_roberts_2015_pa. 
+
+Rather than use a $2 \times 2$ factorial design, I could instead use a 4-arm design. However, to fit the linear regression model, I would create two indicators for the differencing and partisan congruence treatment assignment and include main and interaction effects. Therefore, I do not believe there would be meaningful differences between the performance, in terms of Power or Bias, of the two studies. Sticking with a $2 \times 2$ factorial design, I consider the possible effects of a loss in statistical power due to the inclusion of the interaction terms.
+
+```{r}
+#| label: study-simulations
+# Declare the design ----
+#` Description of true DGP
+#` Make a sample with an N of 2000
+#` Errors should be normally distributed and centered around zero
+#` The outcome variable is linearly related to the treatment, which is randomly assigned and is between a control and treatment condition
+#` The treatment variable is moderated by whether or not it is congruent with their political attitudes 
+#` The effect sizes can vary anywhere between -0.9 and 0.9. However, my expectation is that i will represent the moderating effect size, the main effect of the treatment will be i/3, the main effect of attention will be i/6, knowledge will be i/6, gender will be i/10, and white will be i/15.
+sims = 1000
+effect = c(-0.9, -0.8, -0.7,-0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+sample = c(250, 1000, 1500)
+data[['final_df']] = data.frame()
+for(i in effect){
+    for(n in sample){
+        #** DGP
+    study_dgp = declare_model(N = n, U = rnorm(N, sd = 0))
+    #** 2x2 factorial design
+        potential_outcomes = declare_potential_outcomes(Y_Z_0_P_0 = (0 + U), Y_Z_1_P_0 = (i/3 + U), Y_Z_0_P_1 = (i/3 + U), Y_Z_1_P_1 = (i + U))
+
+        estimand_1 = declare_inquiry(ATE_Z = 0 * mean(Y_Z_1_P_1 - Y_Z_0_P_1) + (1 - 0) * mean(Y_Z_1_P_0 - Y_Z_0_P_0))
+
+        estimand_2 = declare_inquiry(ATE_P = 0 * mean(Y_Z_1_P_1 - Y_Z_1_P_0) + (1- 0) * mean(Y_Z_0_P_1 - Y_Z_0_P_0))
+        
+        estimand_3 = declare_inquiry(ATE_ZP = mean((Y_Z_1_P_1 - Y_Z_1_P_0) - (Y_Z_0_P_1 - Y_Z_0_P_0)))
+
+        assign_Z = declare_assignment(Z = complete_ra(N, prob = 0.5))
+
+        assign_P = declare_assignment(P = block_ra(prob = 0.5, blocks = Z))
+
+        reveal_Y = declare_reveal(Y_variables = Y, assignment_variables = c(Z, P))
+
+        estimator_1 = declare_estimator(Y ~ Z + P, model = lm_robust, term = c('Z', 'P'), inquiry = c('ATE_Z', 'ATE_P'), label = paste('2x2 Main Effect', 'N =', n))
+
+        estimator_2 = declare_estimator(Y ~ Z + P + Z:P, model = lm_robust, term = 'Z:P', inquiry = 'ATE_ZP', label = paste('2x2 Interaction', 'N =', n))
+
+        factorial = study_dgp + potential_outcomes + estimand_1 + estimand_2 + estimand_3 + assign_Z + assign_P + reveal_Y + estimator_1 + estimator_2
+
+    # Combine all of it
+    design_diagnoses = diagnose_design(factorial, sims = sims)
+    tidy = broom::tidy(design_diagnoses) |>
+        mutate(effect_size = i)
+    data[['final_df']] = rbind(data[['final_df']], tidy)
+}}
+saveRDS(data[['final_df']], 'study_simulation.rds')
+```
+
+As including interaction terms from a factorial design in regression require a larger sample for similar levels of statistical power, I use the **declareDesign** package [@blair_et-al_2022_fabricatr] to examine the performance of the design along with the intended estimator at varying sample sizes from ```r sprintf('%.0f', sample[1]) ``` total participants (n = ```r sprintf('%.0f', sample[1]/4) ``` in each condition) to ```r sprintf('%.0f', sample[3]) ``` total participants (n = ```r sprintf('%.0f', sample[3]/4) ``` in each condition). 
+
+```{r}
+#| label: fig-study
+#| fig-cap: 1000 simulated designs using OLS with robust standard errors
+    #* Extract diagnosands
+rmse = data[['final_df']] |>
+    filter(diagnosand == 'rmse')
+
+bias = data[['final_df']] |>
+    filter(diagnosand == 'bias')
+
+power = data[['final_df']] |>
+    filter(diagnosand == 'power')
+
+rmsePlot = ggplot(data = rmse) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'none', legend.title = element_blank(),text=element_text(size=16, family = 'sans')) + 
+    labs(x = 'Effect Size', y = '', title = 'RMSE')
+biasPlot = ggplot(data = bias) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'none', text=element_text(size=16, family = 'sans')) +
+    labs(x = '', y = '', title = 'Bias')
+powerPlot = ggplot(data = power) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'bottom', text=element_text(size=12, family = 'sans')) +
+    labs(x = '', y = '', title = 'Power', caption = 'Data source: 1000 simulated designs using OLS with robust standard errors.', linetype = 'Estimator', shape = 'Estimator') +
+    guides(linetype = guide_legend(nrow = 3))
+
+powerPlot
+```
+
+I define effect sizes that range from ```r sprintf('%.1f', effect[1]) ``` and ```r sprintf('%.1f', effect[19]) ```. I also specify target sample sizes as ```r sprintf('%.0f', sample[1]) ```, ```r sprintf('%.0f', sample[2]) ```, and ```r sprintf('%.0f', sample[3]) ```. The simulated study relies on linear regression with robust standard errors. I choose robust standard errors rather than classical standard errors as [@king_roberts_2015_pa] demonstrate their use for identifying model misspecifications. In cases that model misspecification has been resolved, these standard errors should be equivalent to those of classical standard errors. I then simulate ```r sprintf('%.0f', sims)``` studies with each of these features. @fig-study presents the Power from the estimates. The results suggest that I should have sufficient power with a sample of ```r sprintf('%.0f', sample[1]) ``` participants and this holds across the range of my effect sizes. However, given attrition rates that are common with many online survey experiment platforms, I intend to collect a sample of ```r sprintf('%.0f', sample[2]) ``` knowing that even if only one-quarter of my sample successfully completes the study, I should have a large enough sample. It is important to be cognizant that these simulations, however, assume that this is conducted in ideal conditions. 
+
+
+# Proposed protocol
+
+After providing their informed consent, I prompt subjects to to provide a number of demographic questions; including their partisan identification. Participants are then randomly assigned into one of four conditions based on the combination of the focus being on partisan-congruent or partisan-incongruent members of congress and a treatment that highlights difference and elite polarization or one that emphasizes bi-partisanship and unity. 
+
+> Congress introduced a new bill today. The bill **[disliked by Republicans/disliked by Democrats/disliked by many/disliked by many]** is meant to address funding concerns for high-use interstate highways. In reference to the bill, **[Republican Leadership/Democratic Leadership/a Republican-lead bipartisan coalition/a Democrat-lead bipartisan coalition]** expressed their feelings indicating that they felt this bill was not important. During the floor vote **[Republicans spoke at length about the Democrats' desire to slow Congress down with "pointless bills"/Democrats spoke at length about the Republicans' desire to slow Congress down with "pointless bills"/prominent Republicans representing a bipartisan coalition spoke at length about their belief that there are more pressing concerns/prominent Democrats representing a bipartisan coalition spoke at length about their belief that there are more pressing concerns]**. Afterwards on the floor, **[Republicans were huddled talking about how to make sure it doesn't come back up for a vote next session/Democrats were huddled talking about how to make sure it doesn't come back up for a vote next session/Republicans joined Democratic colleagues in a huddle talking about strategies to make sure it doesn't come back up for a vote next session/Democrats joined Republican colleagues in a huddle talking about strategies to make sure it doesn't come back up for a vote next session]**. That afternoon, when speaking to the press, **[Republican leaders talked about how Democrats don't care about the well-being of the country and are becoming more out-of-step with Americans/Democratic leaders talked about how Republicans don't care about the well-being of the country and are becoming more out-of-step with Americans/Republican leaders talked about how great it is to make sure everything is just right to make the bill work for Americans/Democratic leaders talked about how great it is to make sure everything is just right to make the bill work for Americans]**.
+
+Immediately following the treatment, participants will be presented with an attention check on a separate page asking them "In the brief news report that you just read, what was the bill about?". Subjects who are unable to answer the question or do so incorrectly will be excluded from later analyses. 
+
+Once they have responded to the attention check, I will then ask the subjects the three questiosn that will be the dependent variables in the three studies:
+
+1. Which statement do you think characterizes the behavior of the politicians covered in the brief report the best?
+  - Unified
+  - Normal
+  - Divided
+2. Do you think the party leaders should be:
+  - Rewarded by others in the party for how they handled the situation
+  - Others in the party shouldn't do anything as a result of how they handled the situation
+  - Punished by others in the party for how they handled the situation
+3. On a scale of 0-100, where 0 represents "Cold" and 100 represents Very Warm, how do you feel about:
+  - Republicans
+  - Democrats
