@@ -22,4 +22,7 @@ Academic project examining the role of elite behavioral manifestations of polari
      - pap_elite_norms_mass_polarization.qmd: Quarto document, that when compiled, renders the pap_elite_norms_mass_polarization.pdf file. Includes R code for analyses as well.
      - references.bib : bibliography file
      - study_simulation.rds : RDS file that saves simulated studies
+- slides/
+     - dcr_elite_norms_mass_polarization_fall_2022.qmd: qmd file to create slides for JAWS presentation
+     - dcr_elite_norms_mass_polarization_fall_2022.html: html file of slides for JAWS presentation
 - .gitignore : tells github which files to ignore for version control
