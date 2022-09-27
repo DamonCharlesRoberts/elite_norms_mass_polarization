@@ -1,5 +1,7 @@
 **/figures
-**/slides
+slides/*.tex
+slides/*.pdf
+slides/*.png
 .DS_Store
 **/memos_feedback
 **/data

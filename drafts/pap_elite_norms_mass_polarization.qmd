@@ -31,7 +31,7 @@ keywords:
   - mass polarization
   - norms
 date: today
-bibliography: references.bib
+bibliography: "../assets/references.bib"
 format:
   hikmah-pdf: default
 execute:

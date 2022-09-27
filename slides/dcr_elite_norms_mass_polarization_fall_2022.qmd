@@ -1,0 +1,189 @@
+---
+title: Changing Norms and Partisan Polarization
+subtitle: How elites advance mass polarization
+author: Damon C. Roberts, University of Colorado Boulder
+format:
+    revealjs:
+        self-contained: true
+        theme: serif
+        incremental: true
+        scrollable: true
+        slide-number: true
+        slide-level: 3
+bibliography: "../assets/references.bib"
+execute:
+    echo: false
+    warnings: false
+    messages: false
+---
+
+```{r}
+#| label: setup-block
+
+# modularly load functions
+box::use(
+    dplyr = dplyr[filter],
+    ggplot2 = ggplot2[ggplot, aes, geom_line, geom_point, theme_bw, theme, labs, element_blank, element_text, guides, guide_legend]
+)
+```
+
+### Question
+
+Do behavioral manifestations of political polarization among elites influence polarization among the public?
+
+---
+
+![2019 State of the Union, Credit: Ohio State News](../assets/images/sotu_2019.jpg)
+
+### Political polarization among the public versus elites
+
+- The public are polarized on policy [@abramowitz_saunders_2006_prq] and are affectively polarized [@iyengar_et-al_2012].
+- Elites are not just polarized on the issues, but they are also affectively polarized [@enders_2021_jop]. 
+
+### Where does this come from?
+
+- Some argue that polarization is a symptom of ideological and partisan sorting [e.g., @fiorina_abrams_2008_arps].
+- Others take a more social identity theory approach:
+    - partisanship is greater than just issue attitudes, but it reflects a social identity [@campbell_et-al_1969]
+    - polarization is a reflection of people expressing their partisan identification [@huddy_et-al_2015_apsr]
+    - it is increasing as a result of clearer group distinction and differentiation [@mason_2018_cup]
+
+### What are the implications?
+
+- There are many, but some examples are:
+    - the public increasingly distrust and loathe out-partisans [@iyengar_et-al_2012]
+    - voters are more likely to support politically extreme candidates in primaries [@utych_2020_es]
+    - express co-partisan preferences in potential dating partners [@nicholson_et-al_2016;@huber_2017]
+    - express preferences to live in neighborhoods that appear characteristically [@hetherington_weiler_2018_hmh] co-partisan [@liu_et-al_2019]
+    - have strong affective reactions to the prospect of having conversations with out-partisans [@carlson_settle_2022_cup]
+
+### How does this differentiation occur?
+
+- Many blame elites
+    - the media act as gatekeepers who give a platform to ideologically extreme views [@padgett_et-al_2019_joc]
+    - politicians are in ideological conflict and that this conflict is extended to the public [@layman_carsey_2002_ajps]
+
+### What do norms have to play in this?
+
+- As elites appear to be polarized, we shouldn't expect that they just express this polarization through speeches, media appearances, statements, etc.
+    - elites engage in behavior that might be interpreted as polarized. 
+    - e.g., the tendency for Republicans to mingle with Republicans and Democrats to mingle with Democrats on the house floor [@dietrich_2021]
+- Beyond these traditional ways that elites may teach the public about norms of being a good partisan - which the public express preferences to learn and follow[@pickup_et-al_2020_pb] - the public may also learn from behavioral manifestations of it.
+    - They want to do it because identifiers with a social group often have motivations to feel like they are part of the group.
+    - They have that information there and it might be more accessible relative to things like the SOTU, campaigns, floor votes, etc.
+
+
+###  So what might we expect if this is the case?
+
+When the public view media that highlight and evaluate this differencing behavior among elites, they will:
+
+- **$H_1$**: be able to detect such differencing behavior
+- **$H_2$**: be okay with their co-partisan representatives to engage in such behavior
+- **$H_3$**: they will see it as appropriate behavior for them and other co-partisans to engage in  
+- **$H_4$**: will view these same behaviors by out-partisans as inappropriate
+- **$H_5$**: and will hold negative atttitudes toward out-partisans who do this
+
+## Proposed Experiment
+
+- Separated in pre-analysis plan as three separate studies, but the plan is to run one experiment.
+- $2 \times 2$ factorial design
+    - after informed consent, demographic and political attitudes questionaire, subjects are assigned into 4 conditions
+
+---
+
+
+|                 | Congruent | Incongruent |
+|-----------------|-----------|-------------|
+| Difference      |    1      |     2       |
+| Bi-partisanship |    3      |     4       |
+
+: Proposed design {#tbl-proposed-design}
+---
+
+>Congress introduced a new bill today. The bill **[disliked by Republicans/disliked by Democrats/disliked by many/disliked by many]** is meant to address funding concerns for high-use interstate highways. In reference to the bill, **[Republican Leadership/Democratic Leadership/a Republican-lead bipartisan coalition/a Democrat-lead bipartisan coalition]** expressed their feelings indicating that they felt this bill was not important. During the floor vote **[Republicans spoke at length about the Democrats' desire to slow Congress down with "pointless bills"/Democrats spoke at length about the Republicans' desire to slow Congress down with "pointless bills"/prominent Republicans representing a bipartisan coalition spoke at length about their belief that there are more pressing concerns/prominent Democrats representing a bipartisan coalition spoke at length about their belief that there are more pressing concerns]**. Afterwards on the floor, **[Republicans were huddled talking about how to make sure it doesn't come back up for a vote next session/Democrats were huddled talking about how to make sure it doesn't come back up for a vote next session/Republicans joined Democratic colleagues in a huddle talking about strategies to make sure it doesn't come back up for a vote next session/Democrats joined Republican colleagues in a huddle talking about strategies to make sure it doesn't come back up for a vote next session]**. That afternoon, when speaking to the press, **[Republican leaders talked about how Democrats don't care about the well-being of the country and are becoming more out-of-step with Americans/Democratic leaders talked about how Republicans don't care about the well-being of the country and are becoming more out-of-step with Americans/Republican leaders talked about how great it is to make sure everything is just right to make the bill work for Americans/Democratic leaders talked about how great it is to make sure everything is just right to make the bill work for Americans]**.
+
+---
+
+1. Which statement do you think characterizes the behavior of the politicians covered in the brief report the best?
+  - Unified
+  - Normal
+  - Divided
+
+---
+
+2. Do you think the party leaders should be:
+  - Rewarded by others in the party for how they handled the situation
+  - Others in the party shouldn't do anything as a result of how they handled the situation
+  - Punished by others in the party for how they handled the situation
+
+---
+
+3. On a scale of 0-100, where 0 represents "Cold" and 100 represents Very Warm, how do you feel about:
+  - Republicans
+  - Democrats
+
+---
+
+# Power analysis
+
+- Use @blair_et-al_2019 MIDA approach by creating a number of simulated studies and comparing across them when varying a feature. In this case, the sample size.
+- Estimates: range from -0.9 to 0.9
+- Sample: 250, 1000, 1500
+
+---
+
+```{r}
+#| label: load-simulation-rds
+# create empty data list object
+data = list()
+
+# load data.frame of simulated studies
+data[['final_df']] <- readRDS('../drafts/study_simulation.rds')
+
+```
+
+```{r}
+#| label: fig-study
+#| fig-cap: 1000 simulated designs using OLS with robust standard errors
+    #* Extract diagnosands
+rmse <- data[['final_df']] |>
+    filter(diagnosand == 'rmse')
+
+bias <- data[['final_df']] |>
+    filter(diagnosand == 'bias')
+
+power <- data[['final_df']] |>
+    filter(diagnosand == 'power')
+
+rmsePlot = ggplot(data = rmse) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'none', legend.title = element_blank(),text=element_text(size=16, family = 'sans')) + 
+    labs(x = 'Effect Size', y = '', title = 'RMSE')
+biasPlot = ggplot(data = bias) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'none', text=element_text(size=16, family = 'sans')) +
+    labs(x = '', y = '', title = 'Bias')
+powerPlot = ggplot(data = power) +
+    geom_line(aes(x = effect_size, y = estimate, group = estimator, linetype = estimator)) +
+    geom_point(aes(x = effect_size, y = estimate, group = estimator, shape = estimator)) +
+    theme_bw() +
+    theme(legend.position = 'bottom', text=element_text(size=12, family = 'sans')) +
+    labs(x = '', y = '', title = 'Power', caption = 'Data source: 1000 simulated designs using OLS with robust standard errors.', linetype = 'Estimator', shape = 'Estimator') +
+    guides(linetype = guide_legend(nrow = 3))
+
+powerPlot
+```
+
+### I'd love your feedback!
+
+Contact: damon.roberts-1[at]colorado.edu
+
+Materials: github.com/damoncroberts/elite_norms_mass_polarization
+
+### References
+:::{#refs}
+:::
