@@ -1,0 +1,6 @@
+*.tex linguist-detectable=false
+*.lua linguist-detectable=false
+*.qmd linguist-language=R
+*.tex linguist-language=R
+*.js linguist-vendored
+*.html linguist-vendored
